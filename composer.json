@@ -1,0 +1,20 @@
+{
+    "name": "press-bits/media-library-svg-edit",
+    "description": "Enable display and editing of Scalable Vector Graphics (SVG) in the WordPress media library.",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Dylan Kuhn",
+            "homepage": "http://www.cyberhobo.net"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0",
+		"jangobrick/php-svg": "^0.5.2"
+    },
+	"autoload": {
+		"psr-4": {
+			"PressBits\\MediaLibrary\\": "source/"
+		}
+	}
+}

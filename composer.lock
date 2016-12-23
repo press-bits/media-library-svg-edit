@@ -1,0 +1,60 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
+    ],
+    "hash": "052f82b92e1ef3d70434618308b2c121",
+    "content-hash": "781c4ab2c5cea66acc85aa2a5c97a6dd",
+    "packages": [
+        {
+            "name": "jangobrick/php-svg",
+            "version": "v0.5.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/JangoBrick/php-svg.git",
+                "reference": "ce162b648d58234b90647306c632c5e19ecf3b61"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/JangoBrick/php-svg/zipball/ce162b648d58234b90647306c632c5e19ecf3b61",
+                "reference": "ce162b648d58234b90647306c632c5e19ecf3b61",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "JangoBrick\\SVG\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "JangoBrick"
+                }
+            ],
+            "description": "Read, edit, write, and render SVG files with PHP",
+            "homepage": "https://github.com/JangoBrick/php-svg",
+            "keywords": [
+                "svg"
+            ],
+            "time": "2016-12-12 14:27:05"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": {
+        "php": ">=5.4.0"
+    },
+    "platform-dev": []
+}

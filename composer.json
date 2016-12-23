@@ -16,5 +16,20 @@
 		"psr-4": {
 			"PressBits\\MediaLibrary\\": "source/"
 		}
+	},
+	"require-dev": {
+		"squizlabs/php_codesniffer": "^2.7.1"
+	},
+	"scripts": {
+		"post-install-cmd": [
+			"ln -sf ../../bin/pre-commit.sh .git/hooks/pre-commit"
+		],
+		"format": [
+			"phpcbf --standard=PSR2 source"
+		],
+		"sniff": [
+			"phpcs --standard=PSR2 source"
+		],
+		"build": [ "@format", "@sniff" ]
 	}
 }

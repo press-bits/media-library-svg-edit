@@ -23,7 +23,7 @@ class ScalableVectorGraphicsEditing
         if (static::$enabled) {
             return;
         }
-        add_filter('wp_image_editors', [__CLASS__, 'add_editor']);
+        add_filter('wp_image_editors', [__CLASS__, 'addEditor']);
         static::$enabled = true;
     }
 
@@ -34,7 +34,8 @@ class ScalableVectorGraphicsEditing
      * @param array $editors
      * @return array
      */
-    public static function add_editor( $editors ) {
+    public static function addEditor($editors)
+    {
         return $editors;
     }
 }

@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "8ca6c7d566ff68d10e161e6e9d6ed750",
-    "content-hash": "9b0996923ac0b048c582d1431ddb7efa",
+    "hash": "c1df6f475cb1af21afb36deb92c3fe8e",
+    "content-hash": "05da76c09f424d61aa992ca9fa8997b7",
     "packages": [
         {
             "name": "jangobrick/php-svg",

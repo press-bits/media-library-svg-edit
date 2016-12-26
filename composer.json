@@ -28,7 +28,7 @@
 			"phpcbf --standard=PSR2 source"
 		],
 		"sniff": [
-			"phpcs --standard=PSR2 source"
+			"phpcs --standard=PSR2 --exclude=PSR1.Methods.CamelCapsMethodName source"
 		],
 		"build": [ "@format", "@sniff" ]
 	}

@@ -29,6 +29,15 @@ class ScalableVectorGraphicsEditor extends WP_Image_Editor {
 	protected $svg_image;
 
 	/**
+	 * The path of the SVG file.
+	 *
+	 * @since 0.1.0
+	 * @var string
+	 */
+	protected $file;
+
+
+	/**
 	 * Whether the editor can be loaded.
 	 *
 	 * @since 0.1.0
@@ -51,18 +60,32 @@ class ScalableVectorGraphicsEditor extends WP_Image_Editor {
 	}
 
 	/**
+	 * Instantiate an SVG image editor;
+	 *
+	 * @since 0.1.0
+	 * @param string $file The path of the SVG file to edit.
+	 */
+	public function __construct( $file ) {
+		$this->file = $file;
+	}
+
+	/**
 	 * Load an SVG image.
 	 *
 	 * @since 0.1.0
-	 * @param string $path The path to the SVG file to load.
 	 * @return bool|WP_Error
 	 */
-	public function load( $path ) {
+	public function load() {
+		if ( $this->svg_image ) {
+			return true;
+		}
+
 		try {
-			$this->svg_image = SVGImage::fromFile( $path );
+			$this->svg_image = SVGImage::fromFile( $this->file );
 		} catch ( Exception $e ) {
 			return new WP_Error( 'svg_editor_load_error', 'Failed to load SVG file', compact( 'path', 'e' ) );
 		}
+
 		return $this->svg_image instanceof SVGImage;
 	}
 

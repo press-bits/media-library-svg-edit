@@ -47,8 +47,8 @@ class ScalableVectorGraphicsEditor extends PHPUnit_Framework_TestCase {
 			->with( $test_path )
 			->andReturn( $svg_mock );
 
-		$editor = new Editor();
-		$this->assertTrue( $editor->load( $test_path ), 'Expected SVG file to load.' );
+		$editor = new Editor( $test_path );
+		$this->assertTrue( $editor->load(), 'Expected SVG file to load.' );
 	}
 
 	public function test_load_exception() {
@@ -56,9 +56,9 @@ class ScalableVectorGraphicsEditor extends PHPUnit_Framework_TestCase {
 		$svg_mock->shouldReceive( 'fromFile' )
 			->andThrow( 'RuntimeException' );
 
-		$editor = new Editor();
+		$editor = new Editor( 'test-path' );
 		$this->setExpectedException( 'RuntimeException' );
-		$editor->load( 'test-path' );
+		$editor->load();
 	}
 
 }

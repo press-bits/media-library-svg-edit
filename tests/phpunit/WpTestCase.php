@@ -1,6 +1,6 @@
 <?php
 
-namespace PressBits\UnitTests;
+namespace PressBits\UnitTest;
 
 use PHPUnit_Framework_TestCase;
 use Brain\Monkey;

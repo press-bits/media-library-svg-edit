@@ -21,6 +21,11 @@
 		"wp-coding-standards/wpcs": "^0.10.0",
 		"brain/monkey": "^1.4.2"
 	},
+	"autoload-dev": {
+		"psr-4": {
+			"PressBits\\UnitTest\\": "tests/phpunit"
+		}
+	},
 	"scripts": {
 		"post-install-cmd": [
 			"phpcs --config-set installed_paths vendor/wp-coding-standards/wpcs",

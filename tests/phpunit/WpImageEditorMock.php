@@ -1,6 +1,6 @@
 <?php
 
-namespace PressBits\UnitTests;
+namespace PressBits\UnitTest;
 
 class WpImageEditorMock {
 

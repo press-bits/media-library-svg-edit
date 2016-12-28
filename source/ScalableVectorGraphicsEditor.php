@@ -86,7 +86,29 @@ class ScalableVectorGraphicsEditor extends WP_Image_Editor {
 			return new WP_Error( 'svg_editor_load_error', 'Failed to load SVG file', compact( 'path', 'e' ) );
 		}
 
+		$this->update_size();
+
 		return $this->svg_image instanceof SVGImage;
 	}
 
+	/**
+	 * Set current image size.
+	 *
+	 * @since 0.1.0
+	 * @param bool|int $width Optional width in pixels.
+	 * @param bool|int $height Optional height in pixels.
+	 * @return bool
+	 */
+	protected function update_size( $width = false, $height = false ) {
+
+		if ( ! $width ) {
+			$width = $this->svg_image->getDocument()->getWidth();
+		}
+
+		if ( ! $height ) {
+			$height = $this->svg_image->getDocument()->getHeight();
+		}
+
+		return parent::update_size( $width, $height );
+	}
 }

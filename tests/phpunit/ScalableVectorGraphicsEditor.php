@@ -4,27 +4,21 @@ namespace PressBits\UnitTest\MediaLibrary;
 
 use PressBits\MediaLibrary\ScalableVectorGraphicsEditor as Editor;
 
-use PressBits\UnitTest\WpImageEditorMock;
-use PressBits\UnitTest\WpErrorMock;
-
+use PressBits\UnitTest\WpImageEditor;
 
 use Mockery;
-use Brain\Monkey;
-use Brain\Monkey\Functions;
 use PHPUnit_Framework_TestCase;
 
 class ScalableVectorGraphicsEditor extends PHPUnit_Framework_TestCase {
 
-
 	public function setUp() {
 		parent::setUp();
-		Monkey::setUp();
-		Mockery::mock('WP_Error');
-		Mockery::mock('WP_Image_Editor');
+		Mockery::mock( 'WP_Error' );
+		WpImageEditor::alias();
 	}
 
 	public function tearDown() {
-		Monkey::tearDown();
+		Mockery::close();
 		parent::tearDown();
 	}
 
@@ -40,25 +34,12 @@ class ScalableVectorGraphicsEditor extends PHPUnit_Framework_TestCase {
 		$this->assertFalse( Editor::supports_mime_type( 'image/jpeg', 'Expected editor to support SVG MIME type.' ) );
 	}
 
-	public function test_load() {
-		$test_path = 'test-path';
-		$svg_mock = Mockery::mock('alias:JangoBrick\SVG\SVGImage');
-		$svg_mock->shouldReceive( 'fromFile' )
-			->with( $test_path )
-			->andReturn( $svg_mock );
-
-		$editor = new Editor( $test_path );
-		$this->assertTrue( $editor->load(), 'Expected SVG file to load.' );
-	}
-
 	public function test_load_exception() {
-		$svg_mock = Mockery::mock('alias:JangoBrick\SVG\SVGImage');
-		$svg_mock->shouldReceive( 'fromFile' )
-			->andThrow( 'RuntimeException' );
+		$svg_mock = Mockery::mock( 'alias:JangoBrick\SVG\SVGImage' );
+		$svg_mock->shouldReceive( 'fromFile' )->andThrow( 'RuntimeException' );
 
 		$editor = new Editor( 'test-path' );
 		$this->setExpectedException( 'RuntimeException' );
 		$editor->load();
 	}
-
 }

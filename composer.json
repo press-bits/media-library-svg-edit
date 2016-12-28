@@ -10,33 +10,37 @@
     ],
     "require": {
         "php": ">=5.4.0",
-		"jangobrick/php-svg": "^0.5.2"
+        "jangobrick/php-svg": "^0.5.2"
     },
-	"autoload": {
-		"psr-4": {
-			"PressBits\\MediaLibrary\\": "source/"
-		}
-	},
-	"require-dev": {
-		"wp-coding-standards/wpcs": "^0.10.0",
-		"brain/monkey": "^1.4.2"
-	},
-	"autoload-dev": {
-		"psr-4": {
-			"PressBits\\UnitTest\\": "tests/phpunit"
-		}
-	},
-	"scripts": {
-		"post-install-cmd": [
-			"phpcs --config-set installed_paths vendor/wp-coding-standards/wpcs",
-			"ln -sf ../../bin/pre-commit.sh .git/hooks/pre-commit"
-		],
-		"format": [
-			"phpcbf --standard=WordPress source"
-		],
-		"sniff": [
-			"phpcs --standard=WordPress --exclude=Generic.Files.LowercasedFilename source"
-		],
-		"build": [ "@format", "@sniff" ]
-	}
+    "autoload": {
+        "psr-4": {
+            "PressBits\\MediaLibrary\\": "source/"
+        }
+    },
+    "require-dev": {
+        "wp-coding-standards/wpcs": "^0.10.0",
+        "brain/monkey": "^1.4.2",
+        "phpunit/phpunit": "~4"
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "PressBits\\UnitTest\\": "tests/phpunit"
+        }
+    },
+    "scripts": {
+        "post-install-cmd": [
+            "phpcs --config-set installed_paths vendor/wp-coding-standards/wpcs",
+            "ln -sf ../../bin/pre-commit.sh .git/hooks/pre-commit"
+        ],
+        "format": [
+            "phpcbf --standard=WordPress source"
+        ],
+        "sniff": [
+            "phpcs --standard=WordPress --exclude=Generic.Files.LowercasedFilename source"
+        ],
+        "build": [
+            "@format",
+            "@sniff"
+        ]
+    }
 }

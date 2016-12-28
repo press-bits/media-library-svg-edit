@@ -18,9 +18,9 @@ class ScalableVectorGraphicsEditor extends PHPUnit_Framework_TestCase {
 
 	public function setUp() {
 		parent::setUp();
-		WpImageEditorMock::init();
-		WpErrorMock::init();
 		Monkey::setUp();
+		Mockery::mock('WP_Error');
+		Mockery::mock('WP_Image_Editor');
 	}
 
 	public function tearDown() {
@@ -29,7 +29,7 @@ class ScalableVectorGraphicsEditor extends PHPUnit_Framework_TestCase {
 	}
 
 	public function test_test() {
-		$this->assertTrue( Editor::test(), 'Expected test method to return true.' );
+		$this->assertTrue( Editor::test( [ 'foo' => 'bar' ] ), 'Expected test method to return true.' );
 	}
 
 	public function test_supports_svg_mime_type() {
@@ -40,25 +40,25 @@ class ScalableVectorGraphicsEditor extends PHPUnit_Framework_TestCase {
 		$this->assertFalse( Editor::supports_mime_type( 'image/jpeg', 'Expected editor to support SVG MIME type.' ) );
 	}
 
-	public function skip_test_load_valid_file() {
-		//$svg_mock = Mockery::mock('alias:JangoBrick\SVG\SVGImage');
-		//$svg_mock->shouldReceive( 'fromFile' )
-		//	->with( 'test-file' )
-		//	->andReturn( $svg_mock );
-
+	public function test_load() {
 		$test_path = 'test-path';
-		Functions::expect('file_exists')->with( $test_path )->andReturn(true);
+		$svg_mock = Mockery::mock('alias:JangoBrick\SVG\SVGImage');
+		$svg_mock->shouldReceive( 'fromFile' )
+			->with( $test_path )
+			->andReturn( $svg_mock );
+
 		$editor = new Editor();
 		$this->assertTrue( $editor->load( $test_path ), 'Expected SVG file to load.' );
 	}
 
-	public function test_load_nonexistant_file() {
+	public function test_load_exception() {
+		$svg_mock = Mockery::mock('alias:JangoBrick\SVG\SVGImage');
+		$svg_mock->shouldReceive( 'fromFile' )
+			->andThrow( 'RuntimeException' );
+
 		$editor = new Editor();
-		$this->assertInstanceOf(
-			'WP_Error',
-			$editor->load( 'nonexistant.svg' ),
-			'Expected an error loading a nonexistant file.'
-		);
+		$this->setExpectedException( 'RuntimeException' );
+		$editor->load( 'test-path' );
 	}
 
 }

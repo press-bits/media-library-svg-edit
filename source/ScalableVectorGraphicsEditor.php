@@ -32,9 +32,10 @@ class ScalableVectorGraphicsEditor extends WP_Image_Editor {
 	 * Whether the editor can be loaded.
 	 *
 	 * @since 0.1.0
+	 * @param array $args Argument array is ignored.
 	 * @return bool
 	 */
-	public static function test() {
+	public static function test( $args = array() ) {
 		return true;
 	}
 
@@ -57,10 +58,11 @@ class ScalableVectorGraphicsEditor extends WP_Image_Editor {
 	 * @return bool|WP_Error
 	 */
 	public function load( $path ) {
-		if ( ! file_exists( $path ) ) {
-			return new WP_Error( 'svg_editor_file_not_found', 'Could not load a non-existant file.', $path );
+		try {
+			$this->svg_image = SVGImage::fromFile( $path );
+		} catch ( Exception $e ) {
+			return new WP_Error( 'svg_editor_load_error', 'Failed to load SVG file', compact( 'path', 'e' ) );
 		}
-		$this->svg_image = SVGImage::fromFile( $path );
 		return $this->svg_image instanceof SVGImage;
 	}
 

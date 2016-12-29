@@ -1,6 +1,6 @@
 <?php
 
-namespace PressBits\UnitTest\MediaLibrary;
+namespace PressBits\UnitTest\ScalableVectorGraphicsEditor;
 
 use PressBits\MediaLibrary\ScalableVectorGraphicsEditor as Editor;
 
@@ -11,7 +11,7 @@ use Mockery\Mock;
 use Brain\Monkey;
 use PHPUnit_Framework_TestCase;
 
-class ScalableVectorGraphicsEditorLoaded extends PHPUnit_Framework_TestCase {
+class WithValidFile extends PHPUnit_Framework_TestCase {
 	protected $test_path = 'test-path';
 	protected $width = 10;
 	protected $height = 5;

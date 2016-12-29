@@ -1,6 +1,6 @@
 <?php
 
-namespace PressBits\UnitTest\MediaLibrary;
+namespace PressBits\UnitTest\ScalableVectorGraphicsEditor;
 
 use PressBits\MediaLibrary\ScalableVectorGraphicsEditor as Editor;
 
@@ -9,7 +9,7 @@ use PressBits\UnitTest\WpImageEditor;
 use Mockery;
 use PHPUnit_Framework_TestCase;
 
-class ScalableVectorGraphicsEditor extends PHPUnit_Framework_TestCase {
+class WithoutValidFile extends PHPUnit_Framework_TestCase {
 
 	public function setUp() {
 		parent::setUp();

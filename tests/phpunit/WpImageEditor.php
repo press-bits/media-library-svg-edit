@@ -3,6 +3,7 @@
 namespace PressBits\UnitTest;
 
 class WpImageEditor {
+	protected $size;
 
 	public static function alias() {
 		if ( ! class_exists( 'WP_Image_Editor' ) ) {
@@ -10,5 +11,8 @@ class WpImageEditor {
 		}
 	}
 
-	protected function update_size( $width = false, $height = false ) {}
+	protected function update_size( $width = false, $height = false ) {
+		$this->size = [ 'width' => (int) $width, 'height' => (int) $height ];
+		return true;
+	}
 }

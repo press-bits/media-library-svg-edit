@@ -5,6 +5,7 @@ namespace PressBits\UnitTest\ScalableVectorGraphicsEditor;
 use PressBits\MediaLibrary\ScalableVectorGraphicsEditor as Editor;
 
 use PressBits\UnitTest\WpImageEditor;
+use PressBits\UnitTest\WpError;
 
 use Mockery;
 use Mockery\Mock;
@@ -20,7 +21,7 @@ class WithValidFile extends PHPUnit_Framework_TestCase {
 
 	public function setUp() {
 		parent::setUp();
-		Mockery::mock( 'WP_Error' );
+		WpError::alias();
 		WpImageEditor::alias();
 		Monkey::setUp();
 		$this->doc_mock = Mockery::mock( 'JangoBrick\SVG\Nodes\Structures\SVGDocumentFragment' );
@@ -106,10 +107,17 @@ class WithValidFile extends PHPUnit_Framework_TestCase {
 
 		Monkey\Functions::expect( 'image_resize_dimensions' )
 			->twice()
-			->with( $this->width, $this->height, $resize_width, $resize_height, Mockery::type('bool') )
+			->with( $this->width, $this->height, $resize_width, $resize_height, Mockery::type( 'bool' ) )
 			->andReturn( [ 0, 0, 0, 0, $resize_width, $resize_height, $this->width, $this->height ] );
 
 		$editor->resize( $resize_width, $resize_height, $crop = true );
 	}
 
+	public function test_rotate_error() {
+		$editor = new Editor( $this->test_path );
+		$editor->load();
+		Monkey\Functions::expect( '__' )->once()->andReturn( 'error message' );
+		$error = $editor->rotate( 90 );
+		$this->assertInstanceOf( 'WP_Error', $error );
+	}
 }

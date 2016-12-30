@@ -159,6 +159,19 @@ class ScalableVectorGraphicsEditor extends WP_Image_Editor {
 	}
 
 	/**
+	 * Rotate SVG image.
+	 *
+	 * Not yet implemented.
+	 *
+	 * @since 0.1.0
+	 * @param float $angle The angle to rotate in degrees.
+	 * @return bool|WP_Error
+	 */
+	public function rotate( $angle ) {
+		return new WP_Error( 'image_rotate_error', __( 'Image rotate failed.' ), $this->file );
+	}
+
+	/**
 	 * Parse the current viewBox attribute.
 	 *
 	 * @since 0.1.0

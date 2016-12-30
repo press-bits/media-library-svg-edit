@@ -121,6 +121,68 @@ class ScalableVectorGraphicsEditor extends WP_Image_Editor {
 	}
 
 	/**
+	 * Crop SVG image.
+	 *
+	 * @since 0.1.0
+	 *
+	 * @param int  $src_x The start x position to crop from.
+	 * @param int  $src_y The start y position to crop from.
+	 * @param int  $src_w The width to crop.
+	 * @param int  $src_h The height to crop.
+	 * @param int  $dst_w Optional. The destination width.
+	 * @param int  $dst_h Optional. The destination height.
+	 * @param bool $src_abs Optional. If the source crop points are absolute.
+	 * @return bool
+	 */
+	public function crop( $src_x, $src_y, $src_w, $src_h, $dst_w = null, $dst_h = null, $src_abs = false ) {
+
+		if ( $src_abs ) {
+			$src_w -= $src_x;
+			$src_h -= $src_y;
+		}
+
+		$viewbox = $this->get_viewbox();
+
+		$viewbox['x'] += $src_x;
+		$viewbox['y'] += $src_y;
+		$viewbox['width'] = $src_w;
+		$viewbox['height'] = $src_h;
+
+		$this->set_viewbox( $viewbox );
+
+		$dst_w = $dst_w ?: $src_w;
+		$dst_h = $dst_h ?: $src_h;
+
+		$this->resize( $dst_w, $dst_h, $crop = false );
+
+		return true;
+	}
+
+	/**
+	 * Parse the current viewBox attribute.
+	 *
+	 * @since 0.1.0
+	 * @return array Keys 'x', 'y', 'width', 'height'.
+	 */
+	protected function get_viewbox() {
+		$dimensions = explode( ' ', $this->svg_image->getDocument()->getAttribute( 'viewBox' ), 4 );
+		list( $x, $y, $width, $height ) = array_map( 'intval', array_pad( $dimensions, 4, null ) );
+		$width = $width ?: $this->size['width'];
+		$height = $height ?: $this->size['height'];
+		return compact( 'x', 'y', 'width', 'height' );
+	}
+
+	/**
+	 * Set the current viewBox attribute.
+	 *
+	 * @since 0.1.0
+	 * @param array $viewbox Keys 'x', 'y', 'width', 'height' in that order.
+	 */
+	protected function set_viewbox( $viewbox ) {
+		$this->svg_image->getDocument()->setAttribute( 'viewBox', implode( ' ', $viewbox ) );
+	}
+
+	/**
 	 * Set current image size.
 	 *
 	 * @since 0.1.0

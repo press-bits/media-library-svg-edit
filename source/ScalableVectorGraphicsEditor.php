@@ -20,6 +20,14 @@ use WP_Error;
 class ScalableVectorGraphicsEditor extends WP_Image_Editor {
 
 	/**
+	 * The SVG mime type.
+	 *
+	 * @since 0.1.0
+	 * @var string
+	 */
+	protected static $mime_type = 'image/svg+xml';
+
+	/**
 	 * The loaded SVG image.
 	 *
 	 * @since 0.1.0
@@ -55,7 +63,7 @@ class ScalableVectorGraphicsEditor extends WP_Image_Editor {
 	 * @return bool
 	 */
 	public static function supports_mime_type( $mime_type ) {
-		return 'image/svg+xml' === $mime_type;
+		return  static::$mime_type === $mime_type;
 	}
 
 	/**
@@ -183,6 +191,56 @@ class ScalableVectorGraphicsEditor extends WP_Image_Editor {
 	 */
 	public function flip( $horz, $vert ) {
 		return new WP_Error( 'image_rotate_error', __( 'Image flip failed.' ), $this->file );
+	}
+
+	/**
+	 * Saves current in-memory image to file.
+	 *
+	 * @since 3.5.0
+	 * @access public
+	 *
+	 * @param string $filename The destination file path.
+	 * @param string $mime_type 'image/svg+xml'.
+	 * @return array|WP_Error {'path'=>string, 'file'=>string, 'width'=>int, 'height'=>int, 'mime-type'=>string}
+	 */
+	public function save( $filename = null, $mime_type = null ) {
+
+		if ( ! $filename ) {
+			$filename = $this->generate_filename( null, null, 'svg' );
+		}
+
+		$mime_type = $mime_type ?: static::$mime_type;
+
+		if ( static::$mime_type !== $mime_type ) {
+			return new WP_Error( 'image_save_error', __( 'Image Editor Save Failed' ) );
+		}
+
+		$fs = WP_Filesystem();
+
+		if ( ! $fs or ! $fs->mkdir( dirname( $filename ) ) ) {
+			return new WP_Error( 'image_save_error', __( 'Image Editor Save Failed' ) );
+		}
+
+		if ( false === $fs->put_contents( $filename, $this->svg_image->toXMLString(), 0000666 ) ) {
+			return new WP_Error( 'image_save_error', __( 'Image Editor Save Failed' ) );
+		}
+
+		$this->file = $filename;
+
+		/**
+		 * Filter the name of the saved image file.
+		 *
+		 * @since 2.6.0
+		 *
+		 * @param string $filename Name of the file.
+		 */
+		return array(
+			'path'      => $filename,
+			'file'      => wp_basename( apply_filters( 'image_make_intermediate_size', $filename ) ),
+			'width'     => $this->size['width'],
+			'height'    => $this->size['height'],
+			'mime-type' => $mime_type,
+		);
 	}
 
 	/**

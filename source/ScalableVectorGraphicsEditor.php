@@ -172,6 +172,20 @@ class ScalableVectorGraphicsEditor extends WP_Image_Editor {
 	}
 
 	/**
+	 * Rotate SVG image.
+	 *
+	 * Not yet implemented.
+	 *
+	 * @since 0.1.0
+	 * @param bool $horz Flip along horizontal axis.
+	 * @param bool $vert Flip along verticle axis.
+	 * @return bool|WP_Error
+	 */
+	public function flip( $horz, $vert ) {
+		return new WP_Error( 'image_rotate_error', __( 'Image flip failed.' ), $this->file );
+	}
+
+	/**
 	 * Parse the current viewBox attribute.
 	 *
 	 * @since 0.1.0

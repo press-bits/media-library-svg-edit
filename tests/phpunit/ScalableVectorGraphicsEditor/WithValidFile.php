@@ -120,4 +120,12 @@ class WithValidFile extends PHPUnit_Framework_TestCase {
 		$error = $editor->rotate( 90 );
 		$this->assertInstanceOf( 'WP_Error', $error );
 	}
+
+	public function test_flip_error() {
+		$editor = new Editor( $this->test_path );
+		$editor->load();
+		Monkey\Functions::expect( '__' )->once()->andReturn( 'error message' );
+		$error = $editor->flip( true, false );
+		$this->assertInstanceOf( 'WP_Error', $error );
+	}
 }

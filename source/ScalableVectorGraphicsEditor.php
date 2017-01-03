@@ -244,6 +244,76 @@ class ScalableVectorGraphicsEditor extends WP_Image_Editor {
 	}
 
 	/**
+	 * Resize multiple images from a single source.
+	 *
+	 * @since 3.5.0
+	 * @access public
+	 *
+	 * @param array $sizes {
+	 *     An array of image size arrays. Default sizes are 'small', 'medium', 'large'.
+	 *
+	 *     Either a height or width must be provided.
+	 *     If one of the two is set to null, the resize will
+	 *     maintain aspect ratio according to the provided dimension.
+	 *
+	 *     @type array $size {
+	 *         @type int  ['width']  Optional. Image width.
+	 *         @type int  ['height'] Optional. Image height.
+	 *         @type bool ['crop']   Optional. Whether to crop the image. Default false.
+	 *     }
+	 * }
+	 * @return array An array of resized images' metadata by size.
+	 */
+	public function multi_resize( $sizes ) {
+		$metadata = [];
+		foreach ( $sizes as $size => $size_data ) {
+			$metadata[ $size ] = $this->resize_and_save( $size_data );
+		}
+		return array_filter( $metadata );
+	}
+
+	/**
+	 * Resize and save a single image.
+	 *
+	 * @since 0.1.0
+	 * @param array $size_data Array with keys 'width', height', 'crop'.
+	 * @return array|null
+	 */
+	protected function resize_and_save( $size_data ) {
+		if ( ! isset( $size_data['width'] ) && ! isset( $size_data['height'] ) ) {
+			return null;
+		}
+		if ( ! isset( $size_data['width'] ) ) {
+			$size_data['width'] = null;
+		}
+		if ( ! isset( $size_data['height'] ) ) {
+			$size_data['height'] = null;
+		}
+		if ( ! isset( $size_data['crop'] ) ) {
+			$size_data['crop'] = false;
+		}
+
+		$restore_size = $this->size;
+		if ( ! $this->resize( $size_data['width'], $size_data['height'], $size_data['crop'] ) ) {
+			return null;
+		}
+
+		$restore_file = $this->file;
+
+		$file_data = $this->save();
+
+		$this->file = $restore_file;
+		$this->size = $restore_size;
+
+		if ( ! $file_data or is_wp_error( $file_data ) ) {
+			return null;
+		}
+
+		unset( $file_data['path'] );
+		return $file_data;
+	}
+
+	/**
 	 * Parse the current viewBox attribute.
 	 *
 	 * @since 0.1.0

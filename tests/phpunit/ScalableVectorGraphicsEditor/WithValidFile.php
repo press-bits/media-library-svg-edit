@@ -152,14 +152,56 @@ class WithValidFile extends PHPUnit_Framework_TestCase {
 
 		$info = $this->editor->save( $test_file );
 		$this->assertEquals(
-			array(
+			[
 				'path' => $test_file,
 				'file' => basename( $test_file ),
 				'width' => $this->width,
 				'height' => $this->height,
 				'mime-type' => 'image/svg+xml',
-			),
+			],
 			$info
 		);
+	}
+
+	public function test_multi_resize_resets_width_height_and_veiwbox() {
+		$resize_width = 8;
+		$resize_height = 4;
+
+		$this->editor->load();
+
+		$this->svg_mock->shouldReceive( 'toXMLString' )->once()->andReturn( 'XML' );
+
+		$this->doc_mock->shouldReceive( 'setWidth' )->once()->with( $resize_width )->andReturn( $this->doc_mock );
+		$this->doc_mock->shouldReceive( 'setHeight' )->once()->with( $resize_height )->andReturn( $this->doc_mock );
+
+		$fs_mock = Mockery::mock( 'WP_Filesystem_Base' );
+		$fs_mock->shouldReceive( 'mkdir' )->andReturn( true );
+		$fs_mock->shouldReceive( 'put_contents' )->andReturn( true );
+
+		Monkey\Functions::expect( 'image_resize_dimensions' )
+			->once()
+			->with( $this->width, $this->height, $resize_width, null, false )
+			->andReturn( [ 0, 0, 0, 0, $resize_width, $resize_height, $this->width, $this->height ] );
+
+		Monkey\Functions::expect( 'WP_Filesystem' )->andReturn( $fs_mock );
+		Monkey::filters()->expectApplied( 'image_make_intermediate_size' )->with( '8x4.svg' )->andReturn( '8x4.svg' );
+		Monkey\Functions::expect( 'wp_basename' )->with( '8x4.svg' )->andReturn( '8x4.svg' );
+		Monkey\Functions::expect( 'is_wp_error' )->andReturn( false );
+
+		$resized_data = $this->editor->multi_resize( [ 'test' => [ 'width' => $resize_width ] ] );
+
+		$this->assertEquals(
+			[
+			'test' =>
+				[
+				'file' => "{$resize_width}x{$resize_height}.svg",
+				'width' => $resize_width,
+				'height' => $resize_height,
+				'mime-type' => 'image/svg+xml',
+				],
+			],
+			$resized_data
+		);
+
 	}
 }

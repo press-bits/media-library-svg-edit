@@ -15,4 +15,8 @@ class WpImageEditor {
 		$this->size = [ 'width' => (int) $width, 'height' => (int) $height ];
 		return true;
 	}
+
+	protected function generate_filename( $suffix = null, $dest_path = null, $extension = null ) {
+		return implode( 'x', $this->size ) . '.svg';
+	}
 }

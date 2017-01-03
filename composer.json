@@ -36,7 +36,7 @@
             "phpcbf --standard=WordPress source"
         ],
         "sniff": [
-            "phpcs --standard=WordPress --exclude=Generic.Files.LowercasedFilename source"
+            "phpcs --standard=WordPress --exclude=Generic.Files.LowercasedFilename,WordPress.XSS.EscapeOutput source"
         ],
         "build": [
             "@format",

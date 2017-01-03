@@ -273,6 +273,19 @@ class ScalableVectorGraphicsEditor extends WP_Image_Editor {
 	}
 
 	/**
+	 * Return a stream of current image.
+	 *
+	 * @since 0.1.0
+	 *
+	 * @param string $mime_type Optional MIME type.
+	 */
+	public function stream( $mime_type = null ) {
+		$mime_type = $mime_type ?: static::$mime_type;
+		header( "Content-Type: $mime_type" );
+		echo $this->svg_image->toXMLString();
+	}
+
+	/**
 	 * Resize and save a single image.
 	 *
 	 * @since 0.1.0

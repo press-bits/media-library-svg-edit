@@ -163,7 +163,7 @@ class WithValidFile extends PHPUnit_Framework_TestCase {
 		);
 	}
 
-	public function test_multi_resize_resets_width_height_and_veiwbox() {
+	public function test_multi_resize_resets_width_height_and_viewbox() {
 		$resize_width = 8;
 		$resize_height = 4;
 
@@ -202,6 +202,24 @@ class WithValidFile extends PHPUnit_Framework_TestCase {
 			],
 			$resized_data
 		);
+	}
 
+	public function test_stream() {
+		$this->editor->load();
+
+		$xml = 'XML';
+
+		$this->svg_mock->shouldReceive( 'toXMLString' )->once()->andReturn( $xml );
+
+		ob_start();
+		$this->editor->stream();
+		$content = ob_get_clean();
+
+		$this->assertEquals( $xml, $content );
+		$this->assertContains(
+			'Content-Type: image/svg+xml',
+			xdebug_get_headers(),
+			'Expected SVG content type header.'
+		);
 	}
 }

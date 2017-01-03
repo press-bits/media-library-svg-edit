@@ -1,8 +1,8 @@
-<phpunit bootstrap="vendor/autoload.php" colors="true">
-  <testsuites>
-    <testsuite name="Unit Tests">
-      <directory suffix=".php">tests/phpunit</directory>
-	  <exclude>tests/phpunit/WpTestCase.php</exclude>
-    </testsuite>
-  </testsuites>
+<phpunit bootstrap="vendor/autoload.php" colors="true" stderr="true">
+    <testsuites>
+        <testsuite name="Unit Tests">
+            <directory suffix=".php">tests/phpunit</directory>
+            <exclude>tests/phpunit/WpTestCase.php</exclude>
+        </testsuite>
+    </testsuites>
 </phpunit>

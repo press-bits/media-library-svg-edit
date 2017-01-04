@@ -25,7 +25,7 @@ class ScalableVectorGraphicsEditor extends WP_Image_Editor {
 	 * @since 0.1.0
 	 * @var string
 	 */
-	protected static $mime_type = 'image/svg+xml';
+	protected static $svg_mime_type = 'image/svg+xml';
 
 	/**
 	 * The loaded SVG image.
@@ -63,7 +63,7 @@ class ScalableVectorGraphicsEditor extends WP_Image_Editor {
 	 * @return bool
 	 */
 	public static function supports_mime_type( $mime_type ) {
-		return  static::$mime_type === $mime_type;
+		return  static::$svg_mime_type === $mime_type;
 	}
 
 	/**
@@ -209,9 +209,9 @@ class ScalableVectorGraphicsEditor extends WP_Image_Editor {
 			$filename = $this->generate_filename( null, null, 'svg' );
 		}
 
-		$mime_type = $mime_type ?: static::$mime_type;
+		$mime_type = $mime_type ?: static::$svg_mime_type;
 
-		if ( static::$mime_type !== $mime_type ) {
+		if ( static::$svg_mime_type !== $mime_type ) {
 			return new WP_Error( 'image_save_error', __( 'Image Editor Save Failed' ) );
 		}
 
@@ -280,7 +280,7 @@ class ScalableVectorGraphicsEditor extends WP_Image_Editor {
 	 * @param string $mime_type Optional MIME type.
 	 */
 	public function stream( $mime_type = null ) {
-		$mime_type = $mime_type ?: static::$mime_type;
+		$mime_type = $mime_type ?: static::$svg_mime_type;
 		header( "Content-Type: $mime_type" );
 		echo $this->svg_image->toXMLString();
 	}

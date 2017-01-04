@@ -44,6 +44,7 @@ class ScalableVectorGraphicsEditing {
 	 * @return array
 	 */
 	public static function add_editor( $editors ) {
+		array_unshift( $editors, 'PressBits\\MediaLibrary\\ScalableVectorGraphicsEditor' );
 		return $editors;
 	}
 

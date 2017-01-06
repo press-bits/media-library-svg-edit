@@ -230,7 +230,11 @@ class ScalableVectorGraphicsEditor extends WP_Image_Editor {
 
 		$fs = $GLOBALS['wp_filesystem'];
 
-		if ( ! $fs or ! $fs->mkdir( dirname( $filename ) ) ) {
+		if ( ! $fs ) {
+			return new WP_Error( 'image_save_error', __( 'Image Editor Save Failed' ) );
+		}
+
+		if ( ! $fs->is_dir( dirname( $filename ) ) and ! $fs->mkdir( dirname( $filename ) ) ) {
 			return new WP_Error( 'image_save_error', __( 'Image Editor Save Failed' ) );
 		}
 

@@ -144,7 +144,7 @@ class WithValidFile extends PHPUnit_Framework_TestCase {
 		$test_file = 'test-dir/test-file.svg';
 
 		$fs_mock = Mockery::mock( 'WP_Filesystem_Base' );
-		$fs_mock->shouldReceive( 'mkdir' )
+		$fs_mock->shouldReceive( 'is_dir' )
 			->with( dirname( $test_file ) )
 			->andReturn( true );
 		$fs_mock->shouldReceive( 'put_contents' )
@@ -181,7 +181,7 @@ class WithValidFile extends PHPUnit_Framework_TestCase {
 		$this->doc_mock->shouldReceive( 'setHeight' )->once()->with( $resize_height )->andReturn( $this->doc_mock );
 
 		$fs_mock = Mockery::mock( 'WP_Filesystem_Base' );
-		$fs_mock->shouldReceive( 'mkdir' )->andReturn( true );
+		$fs_mock->shouldReceive( 'is_dir' )->andReturn( true );
 		$fs_mock->shouldReceive( 'put_contents' )->andReturn( true );
 
 		$GLOBALS['wp_filesystem'] = $fs_mock;

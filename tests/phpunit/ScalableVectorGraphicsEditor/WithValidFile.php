@@ -60,15 +60,15 @@ class WithValidFile extends PHPUnit_Framework_TestCase {
 		$new_width = 12;
 		$new_height = 8;
 
+		Monkey\Functions::expect( 'wp_constrain_dimensions' )
+			->once()
+			->with( $this->width, $this->height, $new_width, $new_height )
+			->andReturn( [ $new_width, $new_height ] );
+
 		$this->editor->load();
 
 		$this->doc_mock->shouldReceive( 'setWidth' )->once()->with( $new_width )->andReturn( $this->doc_mock );
 		$this->doc_mock->shouldReceive( 'setHeight' )->once()->with( $new_height )->andReturn( $this->doc_mock );
-
-		Monkey\Functions::expect( 'image_resize_dimensions' )
-			->once()
-			->with( $this->width, $this->height, $new_width, $new_height, false )
-			->andReturn( [ 0, 0, 0, 0, $new_width, $new_height, $this->width, $this->height ] );
 
 		$this->editor->resize( $new_width, $new_height );
 	}
@@ -87,10 +87,10 @@ class WithValidFile extends PHPUnit_Framework_TestCase {
 		$this->doc_mock->shouldReceive( 'getAttribute' )->once()->with( 'viewBox' )->andReturn( null );
 		$this->doc_mock->shouldReceive( 'setAttribute' )->once()->with( 'viewBox', $view_box )->andReturn( $this->doc_mock );
 
-		Monkey\Functions::expect( 'image_resize_dimensions' )
+		Monkey\Functions::expect( 'wp_constrain_dimensions' )
 			->once()
-			->with( $this->width, $this->height, $crop_width, $crop_height, false )
-			->andReturn( [ 0, 0, 0, 0, $crop_width, $crop_height, $this->width, $this->height ] );
+			->with( $this->width, $this->height, $crop_width, $crop_height )
+			->andReturn( [ $crop_width, $crop_height ] );
 
 		$this->editor->crop( $crop_x, $crop_y, $crop_width, $crop_height );
 	}
@@ -108,9 +108,14 @@ class WithValidFile extends PHPUnit_Framework_TestCase {
 		$this->doc_mock->shouldReceive( 'setAttribute' )->once()->with( 'viewBox', $view_box )->andReturn( $this->doc_mock );
 
 		Monkey\Functions::expect( 'image_resize_dimensions' )
-			->twice()
-			->with( $this->width, $this->height, $resize_width, $resize_height, Mockery::type( 'bool' ) )
+			->once()
+			->with( $this->width, $this->height, $resize_width, $resize_height, true )
 			->andReturn( [ 0, 0, 0, 0, $resize_width, $resize_height, $this->width, $this->height ] );
+
+		Monkey\Functions::expect( 'wp_constrain_dimensions' )
+			->once()
+			->with( $this->width, $this->height, $resize_width, $resize_height )
+			->andReturn( [ $resize_width, $resize_height ] );
 
 		$this->editor->resize( $resize_width, $resize_height, $crop = true );
 	}
@@ -178,10 +183,10 @@ class WithValidFile extends PHPUnit_Framework_TestCase {
 		$fs_mock->shouldReceive( 'mkdir' )->andReturn( true );
 		$fs_mock->shouldReceive( 'put_contents' )->andReturn( true );
 
-		Monkey\Functions::expect( 'image_resize_dimensions' )
+		Monkey\Functions::expect( 'wp_constrain_dimensions' )
 			->once()
-			->with( $this->width, $this->height, $resize_width, null, false )
-			->andReturn( [ 0, 0, 0, 0, $resize_width, $resize_height, $this->width, $this->height ] );
+			->with( $this->width, $this->height, $resize_width, null )
+			->andReturn( [ $resize_width, $resize_height ] );
 
 		Monkey\Functions::expect( 'WP_Filesystem' )->andReturn( $fs_mock );
 		Monkey::filters()->expectApplied( 'image_make_intermediate_size' )->with( '8x4.svg' )->andReturn( '8x4.svg' );

@@ -108,7 +108,16 @@ class ScalableVectorGraphicsEditor extends WP_Image_Editor {
 	 * @return bool
 	 */
 	public function resize( $max_w, $max_h, $crop = false ) {
-		$dimensions = image_resize_dimensions( $this->size['width'], $this->size['height'], $max_w, $max_h, $crop );
+
+		if ( $crop ) {
+			$dimensions = image_resize_dimensions( $this->size['width'], $this->size['height'], $max_w, $max_h, $crop );
+		} else {
+			$dimensions = [ 0, 0, 0, 0 ];
+			$constrained_dimensions = wp_constrain_dimensions( $this->size['width'], $this->size['height'], $max_w, $max_h );
+			$dimensions = array_merge( $dimensions, $constrained_dimensions );
+			$dimensions = array_merge( $dimensions, [ $this->size['width'], $this->size['height'] ] );
+		}
+
 		if ( ! $dimensions ) {
 			// No change.
 			return true;

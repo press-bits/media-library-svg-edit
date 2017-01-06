@@ -151,7 +151,8 @@ class WithValidFile extends PHPUnit_Framework_TestCase {
 			->with( $test_file, $xml, 0000666 )
 			->andReturn( true );
 
-		Monkey\Functions::expect( 'WP_Filesystem' )->with( false, 'test-dir' )->andReturn( $fs_mock );
+		$GLOBALS['wp_filesystem'] = $fs_mock;
+
 		Monkey::filters()->expectApplied( 'image_make_intermediate_size' )->with( $test_file )->andReturn( $test_file );
 		Monkey\Functions::expect( 'wp_basename' )->with( $test_file )->andReturn( basename( $test_file ) );
 
@@ -183,12 +184,13 @@ class WithValidFile extends PHPUnit_Framework_TestCase {
 		$fs_mock->shouldReceive( 'mkdir' )->andReturn( true );
 		$fs_mock->shouldReceive( 'put_contents' )->andReturn( true );
 
+		$GLOBALS['wp_filesystem'] = $fs_mock;
+
 		Monkey\Functions::expect( 'wp_constrain_dimensions' )
 			->once()
 			->with( $this->width, $this->height, $resize_width, null )
 			->andReturn( [ $resize_width, $resize_height ] );
 
-		Monkey\Functions::expect( 'WP_Filesystem' )->andReturn( $fs_mock );
 		Monkey::filters()->expectApplied( 'image_make_intermediate_size' )->with( '8x4.svg' )->andReturn( '8x4.svg' );
 		Monkey\Functions::expect( 'wp_basename' )->with( '8x4.svg' )->andReturn( '8x4.svg' );
 		Monkey\Functions::expect( 'is_wp_error' )->andReturn( false );

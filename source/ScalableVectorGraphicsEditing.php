@@ -7,6 +7,8 @@
 
 namespace PressBits\MediaLibrary;
 
+use JangoBrick\SVG\SVGImage;
+
 /**
  * Scalable Vector Graphics Editing.
  *
@@ -33,6 +35,7 @@ class ScalableVectorGraphicsEditing {
 		}
 		add_filter( 'wp_image_editors', [ __CLASS__, 'add_editor' ] );
 		add_filter( 'file_is_displayable_image', [ __CLASS__, 'file_is_displayable_image' ], 10, 2 );
+		add_filter( 'wp_get_attachment_metadata', [ __CLASS__, 'svg_attachment_metadata' ], 10, 2 );
 		static::$enabled = true;
 	}
 
@@ -62,5 +65,36 @@ class ScalableVectorGraphicsEditing {
 			return true;
 		}
 		return $result;
+	}
+
+	/**
+	 * Make metadata for SVG attachments that lack it.
+	 *
+	 * @since 0.1.0
+	 * @param array $data Existing attachment metadata.
+	 * @param int   $attachment_id The attachment ID.
+	 * @return array
+	 */
+	public static function svg_attachment_metadata( $data, $attachment_id ) {
+		if ( $data ) {
+			return $data;
+		}
+
+		$file = get_attached_file( $attachment_id );
+
+		if ( ! $file ) {
+			return $data;
+		}
+
+		if ( ! static::file_is_displayable_image( false, $file ) ) {
+			return $data;
+		}
+
+		$svg = SVGImage::fromFile( $file );
+
+		return [
+			'width' => $svg->getDocument()->getWidth(),
+			'height' => $svg->getDocument()->getHeight(),
+		];
 	}
 }

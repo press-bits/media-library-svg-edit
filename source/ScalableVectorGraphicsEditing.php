@@ -93,8 +93,8 @@ class ScalableVectorGraphicsEditing {
 		$svg = SVGImage::fromFile( $file );
 
 		$data = $data ?: [];
-		$data['width'] = $svg->getDocument()->getWidth();
-		$data['height'] = $svg->getDocument()->getHeight();
+		$data['width'] = intval( $svg->getDocument()->getWidth() );
+		$data['height'] = intval( $svg->getDocument()->getHeight() );
 
 		return $data;
 	}

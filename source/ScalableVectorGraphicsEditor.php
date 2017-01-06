@@ -370,11 +370,11 @@ class ScalableVectorGraphicsEditor extends WP_Image_Editor {
 	protected function update_size( $width = false, $height = false ) {
 
 		if ( ! $width ) {
-			$width = $this->svg_image->getDocument()->getWidth();
+			$width = intval( $this->svg_image->getDocument()->getWidth() );
 		}
 
 		if ( ! $height ) {
-			$height = $this->svg_image->getDocument()->getHeight();
+			$height = intval( $this->svg_image->getDocument()->getHeight() );
 		}
 
 		return parent::update_size( $width, $height );

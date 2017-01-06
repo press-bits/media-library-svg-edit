@@ -31,10 +31,10 @@ class WithValidFile extends PHPUnit_Framework_TestCase {
 		$this->doc_mock = Mockery::mock( 'JangoBrick\SVG\Nodes\Structures\SVGDocumentFragment' );
 		$this->doc_mock->shouldReceive( 'getWidth' )
 			->once()
-			->andReturn( $this->width );
+			->andReturn( $this->width . 'px' );
 		$this->doc_mock->shouldReceive( 'getHeight' )
 			->once()
-			->andReturn( $this->height );
+			->andReturn( $this->height . 'px' );
 
 		$this->svg_mock = Mockery::mock( 'alias:JangoBrick\SVG\SVGImage' );
 

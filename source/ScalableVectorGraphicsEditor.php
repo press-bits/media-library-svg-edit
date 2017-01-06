@@ -110,31 +110,16 @@ class ScalableVectorGraphicsEditor extends WP_Image_Editor {
 	public function resize( $max_w, $max_h, $crop = false ) {
 
 		if ( $crop ) {
-			$dimensions = image_resize_dimensions( $this->size['width'], $this->size['height'], $max_w, $max_h, $crop );
-		} else {
-			$dimensions = [ 0, 0, 0, 0 ];
-			$constrained_dimensions = wp_constrain_dimensions( $this->size['width'], $this->size['height'], $max_w, $max_h );
-			$dimensions = array_merge( $dimensions, $constrained_dimensions );
-			$dimensions = array_merge( $dimensions, [ $this->size['width'], $this->size['height'] ] );
+			return $this->resize_crop( $max_w, $max_h );
 		}
 
-		if ( ! $dimensions ) {
-			// No change.
-			return true;
-		}
+		$width = $max_w ?: $this->size['width'] * ( $max_h / $this->size['height'] );
+		$height = $max_h ?: $this->size['height'] * ( $max_w / $this->size['width'] );
 
-		list( $dst_x, $dst_y, $src_x, $src_y, $dst_w, $dst_h, $src_w, $src_h ) = $dimensions;
+		$this->svg_image->getDocument()->setWidth( $width );
+		$this->svg_image->getDocument()->setHeight( $height );
 
-		if ( $crop ) {
-			$this->crop( $src_x, $src_y, $src_w, $src_h, $dst_w, $dst_h, $src_abs = false );
-		} else {
-			$this->svg_image->getDocument()->setWidth( $dst_w );
-			$this->svg_image->getDocument()->setHeight( $dst_h );
-		}
-
-		$this->update_size( $dst_w, $dst_h );
-
-		return true;
+		return $this->update_size( $width, $height );
 	}
 
 	/**
@@ -300,6 +285,27 @@ class ScalableVectorGraphicsEditor extends WP_Image_Editor {
 		$mime_type = $mime_type ?: static::$svg_mime_type;
 		header( "Content-Type: $mime_type" );
 		echo $this->svg_image->toXMLString();
+	}
+
+	/**
+	 * Resize and crop the SVG image.
+	 *
+	 * @since 0.1.0
+	 * @param int|null $max_w New width in pixels.
+	 * @param int|null $max_h New height in pixels.
+	 * @return bool
+	 */
+	protected function resize_crop( $max_w, $max_h ) {
+		$dimensions = image_resize_dimensions( $this->size['width'], $this->size['height'], $max_w, $max_h, true );
+
+		if ( ! $dimensions ) {
+			// No change.
+			return true;
+		}
+
+		list( $dst_x, $dst_y, $src_x, $src_y, $dst_w, $dst_h, $src_w, $src_h ) = $dimensions;
+
+		return $this->crop( $src_x, $src_y, $src_w, $src_h, $dst_w, $dst_h, $src_abs = false );
 	}
 
 	/**

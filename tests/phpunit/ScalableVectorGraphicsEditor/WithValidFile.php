@@ -151,7 +151,7 @@ class WithValidFile extends PHPUnit_Framework_TestCase {
 			->with( $test_file, $xml, 0000666 )
 			->andReturn( true );
 
-		Monkey\Functions::expect( 'WP_Filesystem' )->andReturn( $fs_mock );
+		Monkey\Functions::expect( 'WP_Filesystem' )->with( false, 'test-dir' )->andReturn( $fs_mock );
 		Monkey::filters()->expectApplied( 'image_make_intermediate_size' )->with( $test_file )->andReturn( $test_file );
 		Monkey\Functions::expect( 'wp_basename' )->with( $test_file )->andReturn( basename( $test_file ) );
 

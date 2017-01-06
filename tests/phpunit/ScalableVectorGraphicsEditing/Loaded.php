@@ -30,7 +30,7 @@ class Loaded extends WpTestCase {
 	}
 
 	public function test_attachment_meta_filter_leaves_existing_data() {
-		$meta = [ 'foo' => 'bar' ];
+		$meta = [ 'width' => 'foo', 'height' => 'bar' ];
 		$filtered_meta = Editing::svg_attachment_metadata( $meta, 0 );
 		$this->assertEquals( $meta, $filtered_meta );
 	}
@@ -60,9 +60,10 @@ class Loaded extends WpTestCase {
 		$doc_mock->shouldReceive( 'getWidth' )->once()->andReturn( $width );
 		$doc_mock->shouldReceive( 'getHeight' )->once()->andReturn( $height );
 
-		$meta = Editing::svg_attachment_metadata( [], $attachment_id );
+		$meta = [ 'file' => $file, 'width' => null, 'height' => null ];
+		$meta = Editing::svg_attachment_metadata( $meta, $attachment_id );
 
-		$this->assertEquals( compact( 'width', 'height' ), $meta, 'Expected filtered meta to be SVG dimensions.' );
+		$this->assertEquals( compact( 'file', 'width', 'height' ), $meta, 'Expected filtered meta to be SVG dimensions.' );
 	}
 
 }

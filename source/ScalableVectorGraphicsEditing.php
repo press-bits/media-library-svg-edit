@@ -76,7 +76,7 @@ class ScalableVectorGraphicsEditing {
 	 * @return array
 	 */
 	public static function svg_attachment_metadata( $data, $attachment_id ) {
-		if ( $data ) {
+		if ( ! empty( $data['width'] ) and ! empty( $data['height'] ) ) {
 			return $data;
 		}
 
@@ -92,9 +92,10 @@ class ScalableVectorGraphicsEditing {
 
 		$svg = SVGImage::fromFile( $file );
 
-		return [
-			'width' => $svg->getDocument()->getWidth(),
-			'height' => $svg->getDocument()->getHeight(),
-		];
+		$data = $data ?: [];
+		$data['width'] = $svg->getDocument()->getWidth();
+		$data['height'] = $svg->getDocument()->getHeight();
+
+		return $data;
 	}
 }

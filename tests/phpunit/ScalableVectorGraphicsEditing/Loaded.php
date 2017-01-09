@@ -13,12 +13,24 @@ class Loaded extends WpTestCase {
 
 	public function test_enable() {
 		WP\Filters::expectAdded( 'wp_image_editors' )
-		->once()
-		->with( [ 'PressBits\\MediaLibrary\\ScalableVectorGraphicsEditing', 'add_editor' ] );
+			->once()
+			->with( [ 'PressBits\\MediaLibrary\\ScalableVectorGraphicsEditing', 'add_editor' ] );
+
+		WP\Filters::expectAdded( 'file_is_displayable_image' )
+			->once()
+			->with( [ 'PressBits\\MediaLibrary\\ScalableVectorGraphicsEditing', 'file_is_displayable_image' ], 10, 2 );
 
 		WP\Filters::expectAdded( 'wp_get_attachment_metadata' )
 			->once()
 			->with( [ 'PressBits\\MediaLibrary\\ScalableVectorGraphicsEditing', 'svg_attachment_metadata' ], 10, 2 );
+
+		WP\Filters::expectAdded( 'admin_body_class' )
+			->once()
+			->with( [ 'PressBits\\MediaLibrary\\ScalableVectorGraphicsEditing', 'admin_body_class' ] );
+
+		WP\Actions::expectAdded( 'admin_print_styles' )
+			->once()
+			->with( [ 'PressBits\\MediaLibrary\\ScalableVectorGraphicsEditing', 'admin_print_styles' ] );
 
 		Editing::enable();
 	}
@@ -66,4 +78,29 @@ class Loaded extends WpTestCase {
 		$this->assertEquals( compact( 'file', 'width', 'height' ), $meta, 'Expected filtered meta to be SVG dimensions.' );
 	}
 
+	public function test_admin_body_class() {
+		$post = (object) [ 'post_mime_type' => 'image/svg+xml' ];
+
+		Functions::expect( 'get_post' )->once()->andReturn( $post );
+
+		$class = Editing::admin_body_class( 'foo' );
+
+		$this->assertEquals(
+			'foo edit-attachment-svg ',
+			$class,
+			'Expected SVG attachment class to be added.'
+		);
+	}
+
+	public function test_admin_print_styles() {
+		ob_start();
+		Editing::admin_print_styles();
+		$css = ob_get_clean();
+
+		$this->assertContains(
+			'.post-type-attachment.edit-attachment-svg .imgedit-flipv',
+			$css,
+			'Expected vertical flip button selector.'
+		);
+	}
 }

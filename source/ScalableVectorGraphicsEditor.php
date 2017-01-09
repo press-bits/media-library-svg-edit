@@ -118,6 +118,9 @@ class ScalableVectorGraphicsEditor extends WP_Image_Editor {
 
 		$this->svg_image->getDocument()->setWidth( $width );
 		$this->svg_image->getDocument()->setHeight( $height );
+		if ( ! $this->svg_image->getDocument()->getAttribute( 'viewBox' ) ) {
+			$this->set_viewbox( [ 0, 0, $this->size['width'], $this->size['height'] ] );
+		}
 
 		return $this->update_size( $width, $height );
 	}

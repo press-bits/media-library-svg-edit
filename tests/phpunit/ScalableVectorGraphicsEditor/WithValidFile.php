@@ -16,6 +16,7 @@ class WithValidFile extends PHPUnit_Framework_TestCase {
 	protected $test_path = 'test-path';
 	protected $width = 10;
 	protected $height = 5;
+	protected $view_box = '0 0 10 5';
 	/** @var  Mock */
 	protected $doc_mock;
 	/** @var  Mock */
@@ -56,7 +57,7 @@ class WithValidFile extends PHPUnit_Framework_TestCase {
 		$this->assertTrue( $this->editor->load(), 'Expected SVG file to load.' );
 	}
 
-	public function test_resize_sets_document_width_and_height() {
+	public function test_resize_sets_sets_width_height_and_view_box() {
 		$new_width = 12;
 		$new_height = 8;
 
@@ -64,6 +65,11 @@ class WithValidFile extends PHPUnit_Framework_TestCase {
 
 		$this->doc_mock->shouldReceive( 'setWidth' )->once()->with( $new_width )->andReturn( $this->doc_mock );
 		$this->doc_mock->shouldReceive( 'setHeight' )->once()->with( $new_height )->andReturn( $this->doc_mock );
+		$this->doc_mock->shouldReceive( 'getAttribute' )->once()->with( 'viewBox' )->andReturn( null );
+		$this->doc_mock->shouldReceive( 'setAttribute' )
+			->once()
+			->with( 'viewBox', $this->view_box )
+			->andReturn( $this->doc_mock );
 
 		$this->editor->resize( $new_width, $new_height );
 	}
@@ -79,7 +85,7 @@ class WithValidFile extends PHPUnit_Framework_TestCase {
 
 		$this->doc_mock->shouldReceive( 'setWidth' )->once()->with( $crop_width )->andReturn( $this->doc_mock );
 		$this->doc_mock->shouldReceive( 'setHeight' )->once()->with( $crop_height )->andReturn( $this->doc_mock );
-		$this->doc_mock->shouldReceive( 'getAttribute' )->once()->with( 'viewBox' )->andReturn( null );
+		$this->doc_mock->shouldReceive( 'getAttribute' )->twice()->with( 'viewBox' )->andReturn( $this->view_box );
 		$this->doc_mock->shouldReceive( 'setAttribute' )->once()->with( 'viewBox', $view_box )->andReturn( $this->doc_mock );
 
 		$this->editor->crop( $crop_x, $crop_y, $crop_width, $crop_height );
@@ -88,14 +94,16 @@ class WithValidFile extends PHPUnit_Framework_TestCase {
 	public function test_resize_with_crop_sets_width_height_and_view_box() {
 		$resize_width = 8;
 		$resize_height = 4;
-		$view_box = '0 0 10 5';
 
 		$this->editor->load();
 
 		$this->doc_mock->shouldReceive( 'setWidth' )->once()->with( $resize_width )->andReturn( $this->doc_mock );
 		$this->doc_mock->shouldReceive( 'setHeight' )->once()->with( $resize_height )->andReturn( $this->doc_mock );
-		$this->doc_mock->shouldReceive( 'getAttribute' )->once()->with( 'viewBox' )->andReturn( null );
-		$this->doc_mock->shouldReceive( 'setAttribute' )->once()->with( 'viewBox', $view_box )->andReturn( $this->doc_mock );
+		$this->doc_mock->shouldReceive( 'getAttribute' )->twice()->with( 'viewBox' )->andReturn( $this->view_box );
+		$this->doc_mock->shouldReceive( 'setAttribute' )
+			->once()
+			->with( 'viewBox', $this->view_box )
+			->andReturn( $this->doc_mock );
 
 		Monkey\Functions::expect( 'image_resize_dimensions' )
 			->once()
@@ -164,6 +172,7 @@ class WithValidFile extends PHPUnit_Framework_TestCase {
 
 		$this->doc_mock->shouldReceive( 'setWidth' )->once()->with( $resize_width )->andReturn( $this->doc_mock );
 		$this->doc_mock->shouldReceive( 'setHeight' )->once()->with( $resize_height )->andReturn( $this->doc_mock );
+		$this->doc_mock->shouldReceive( 'getAttribute' )->once()->with( 'viewBox' )->andReturn( $this->view_box );
 
 		$fs_mock = Mockery::mock( 'WP_Filesystem_Base' );
 		$fs_mock->shouldReceive( 'is_dir' )->andReturn( true );

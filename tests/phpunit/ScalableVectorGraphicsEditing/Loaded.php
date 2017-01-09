@@ -58,7 +58,7 @@ class Loaded extends WpTestCase {
 		$svg_mock->shouldReceive( 'getDocument' )->andReturn( $doc_mock );
 
 		$doc_mock->shouldReceive( 'getWidth' )->once()->andReturn( $width . 'px' );
-		$doc_mock->shouldReceive( 'getHeight' )->once()->andReturn( $height  . 'px');
+		$doc_mock->shouldReceive( 'getHeight' )->once()->andReturn( $height . 'px' );
 
 		$meta = [ 'file' => $file, 'width' => null, 'height' => null ];
 		$meta = Editing::svg_attachment_metadata( $meta, $attachment_id );

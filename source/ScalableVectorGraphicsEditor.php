@@ -183,7 +183,7 @@ class ScalableVectorGraphicsEditor extends WP_Image_Editor {
 	 * @return bool|WP_Error
 	 */
 	public function rotate( $angle ) {
-		return new WP_Error( 'image_rotate_error', __( 'Image rotate failed.' ), $this->file );
+		return new WP_Error( 'image_rotate_error', 'Image rotation not yet supported for SVG.', $this->file );
 	}
 
 	/**
@@ -197,7 +197,7 @@ class ScalableVectorGraphicsEditor extends WP_Image_Editor {
 	 * @return bool|WP_Error
 	 */
 	public function flip( $horz, $vert ) {
-		return new WP_Error( 'image_rotate_error', __( 'Image flip failed.' ), $this->file );
+		return new WP_Error( 'image_flip_error', 'Image flipping not yet supported for SVG.', $this->file );
 	}
 
 	/**
@@ -219,7 +219,7 @@ class ScalableVectorGraphicsEditor extends WP_Image_Editor {
 		$mime_type = $mime_type ?: static::$svg_mime_type;
 
 		if ( static::$svg_mime_type !== $mime_type ) {
-			return new WP_Error( 'image_save_error', __( 'Image Editor Save Failed' ) );
+			return new WP_Error( 'image_save_error', 'Unable to save unsupported MIME type.', compact( 'filename', 'mime_type' ) );
 		}
 
 		if ( ! isset( $GLOBALS['wp_filesystem'] ) ) {
@@ -229,15 +229,15 @@ class ScalableVectorGraphicsEditor extends WP_Image_Editor {
 		$fs = $GLOBALS['wp_filesystem'];
 
 		if ( ! $fs ) {
-			return new WP_Error( 'image_save_error', __( 'Image Editor Save Failed' ) );
+			return new WP_Error( 'image_save_error', 'Unable to access the filesystem.', $filename );
 		}
 
 		if ( ! $fs->is_dir( dirname( $filename ) ) and ! $fs->mkdir( dirname( $filename ) ) ) {
-			return new WP_Error( 'image_save_error', __( 'Image Editor Save Failed' ) );
+			return new WP_Error( 'image_save_error', 'Unable to access the filesystem.', $filename );
 		}
 
 		if ( false === $fs->put_contents( $filename, $this->svg_image->toXMLString(), 0000666 ) ) {
-			return new WP_Error( 'image_save_error', __( 'Image Editor Save Failed' ) );
+			return new WP_Error( 'image_save_error', 'Unable to access the filesystem.', $filename );
 		}
 
 		$this->file = $filename;

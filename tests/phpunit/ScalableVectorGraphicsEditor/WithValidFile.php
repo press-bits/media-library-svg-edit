@@ -80,14 +80,14 @@ class WithValidFile extends PHPUnit_Framework_TestCase {
 		$crop_width = 6;
 		$crop_height = 2;
 		$starting_view_box = '2 1 8 4';
-		$cropped_width = 4.5;
-		$cropped_height = 1;
-		$cropped_view_box = "2.75 1.5 $cropped_width $cropped_height";
+		$cropped_width = 4.8;
+		$cropped_height = 1.6;
+		$cropped_view_box = "2.8 1.8 $cropped_width $cropped_height";
 
 		$this->editor->load();
 
-		$this->doc_mock->shouldReceive( 'setWidth' )->once()->with( $cropped_width )->andReturn( $this->doc_mock );
-		$this->doc_mock->shouldReceive( 'setHeight' )->once()->with( $cropped_height )->andReturn( $this->doc_mock );
+		$this->doc_mock->shouldReceive( 'setWidth' )->once()->with( $crop_width )->andReturn( $this->doc_mock );
+		$this->doc_mock->shouldReceive( 'setHeight' )->once()->with( $crop_height )->andReturn( $this->doc_mock );
 		$this->doc_mock->shouldReceive( 'getAttribute' )->twice()->with( 'viewBox' )->andReturn( $starting_view_box );
 		$this->doc_mock->shouldReceive( 'setAttribute' )
 			->once()

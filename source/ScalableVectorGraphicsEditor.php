@@ -146,19 +146,21 @@ class ScalableVectorGraphicsEditor extends WP_Image_Editor {
 			$src_h -= $src_y;
 		}
 
+		$dst_w = $dst_w ?: $src_w;
+		$dst_h = $dst_h ?: $src_h;
+
 		$viewbox = $this->get_viewbox();
 
-		$width_ratio = $src_w / (float) $viewbox['width'];
-		$height_ratio = $src_h / (float) $viewbox['height'];
+		$width_ratio = (float) $viewbox['width'] / $this->size['width'];
+		$height_ratio = (float) $viewbox['height'] / $this->size['height'];
 
 		// Map coordinates to viewbox.
 		$src_x *= $width_ratio;
 		$src_w *= $width_ratio;
-		$dst_w = $dst_w ? $dst_w * $width_ratio : $src_w;
 		$src_y *= $height_ratio;
 		$src_h *= $height_ratio;
-		$dst_h = $dst_h ? $dst_h * $height_ratio : $src_h;
 
+		// Calculate cropped viewbox.
 		$viewbox['x'] += $src_x;
 		$viewbox['y'] += $src_y;
 		$viewbox['width'] = $src_w;

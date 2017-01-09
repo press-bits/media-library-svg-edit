@@ -77,16 +77,22 @@ class WithValidFile extends PHPUnit_Framework_TestCase {
 	public function test_crop_sets_width_height_and_view_box() {
 		$crop_x = 1;
 		$crop_y = 1;
-		$crop_width = 8;
-		$crop_height = 4;
-		$view_box = '1 1 8 4';
+		$crop_width = 6;
+		$crop_height = 2;
+		$starting_view_box = '2 1 8 4';
+		$cropped_width = 4.5;
+		$cropped_height = 1;
+		$cropped_view_box = "2.75 1.5 $cropped_width $cropped_height";
 
 		$this->editor->load();
 
-		$this->doc_mock->shouldReceive( 'setWidth' )->once()->with( $crop_width )->andReturn( $this->doc_mock );
-		$this->doc_mock->shouldReceive( 'setHeight' )->once()->with( $crop_height )->andReturn( $this->doc_mock );
-		$this->doc_mock->shouldReceive( 'getAttribute' )->twice()->with( 'viewBox' )->andReturn( $this->view_box );
-		$this->doc_mock->shouldReceive( 'setAttribute' )->once()->with( 'viewBox', $view_box )->andReturn( $this->doc_mock );
+		$this->doc_mock->shouldReceive( 'setWidth' )->once()->with( $cropped_width )->andReturn( $this->doc_mock );
+		$this->doc_mock->shouldReceive( 'setHeight' )->once()->with( $cropped_height )->andReturn( $this->doc_mock );
+		$this->doc_mock->shouldReceive( 'getAttribute' )->twice()->with( 'viewBox' )->andReturn( $starting_view_box );
+		$this->doc_mock->shouldReceive( 'setAttribute' )
+			->once()
+			->with( 'viewBox', $cropped_view_box )
+			->andReturn( $this->doc_mock );
 
 		$this->editor->crop( $crop_x, $crop_y, $crop_width, $crop_height );
 	}

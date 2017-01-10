@@ -1,6 +1,6 @@
 <?php
 
-namespace PressBits\UnitTest;
+namespace PressBits\UnitTest\ScalableVectorGraphics;
 
 class WpError {
 

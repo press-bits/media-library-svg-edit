@@ -14,7 +14,7 @@
     },
     "autoload": {
         "psr-4": {
-            "PressBits\\MediaLibrary\\": "source/"
+            "PressBits\\MediaLibrary\\ScalableVectorGraphics\\": "source/"
         }
     },
     "require-dev": {
@@ -24,7 +24,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "PressBits\\UnitTest\\": "tests/phpunit"
+            "PressBits\\UnitTest\\ScalableVectorGraphics\\": "tests/phpunit"
         }
     },
     "scripts": {

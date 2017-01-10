@@ -1,6 +1,6 @@
 <?php
 
-namespace PressBits\UnitTest;
+namespace PressBits\UnitTest\ScalableVectorGraphics;
 
 use PHPUnit_Framework_TestCase;
 use Brain\Monkey;

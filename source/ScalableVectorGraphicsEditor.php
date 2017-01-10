@@ -52,7 +52,10 @@ class ScalableVectorGraphicsEditor extends WP_Image_Editor {
 	 * @return bool
 	 */
 	public static function test( $args = array() ) {
-		return empty( $args['method'] ) or ! in_array( $args['method'], [ 'rotate', 'flip' ], true );
+		if ( empty( $args['methods'] ) ) {
+			return true;
+		}
+		return ! in_array( 'flip', $args['methods'], true ) and ! in_array( 'rotate', $args['methods'], true );
 	}
 
 	/**
@@ -63,7 +66,7 @@ class ScalableVectorGraphicsEditor extends WP_Image_Editor {
 	 * @return bool
 	 */
 	public static function supports_mime_type( $mime_type ) {
-		return  static::$svg_mime_type === $mime_type;
+		return static::$svg_mime_type === $mime_type;
 	}
 
 	/**
@@ -250,10 +253,10 @@ class ScalableVectorGraphicsEditor extends WP_Image_Editor {
 		 * @param string $filename Name of the file.
 		 */
 		return array(
-			'path'      => $filename,
-			'file'      => wp_basename( apply_filters( 'image_make_intermediate_size', $filename ) ),
-			'width'     => $this->size['width'],
-			'height'    => $this->size['height'],
+			'path' => $filename,
+			'file' => wp_basename( apply_filters( 'image_make_intermediate_size', $filename ) ),
+			'width' => $this->size['width'],
+			'height' => $this->size['height'],
 			'mime-type' => $mime_type,
 		);
 	}
@@ -271,10 +274,10 @@ class ScalableVectorGraphicsEditor extends WP_Image_Editor {
 	 *     If one of the two is set to null, the resize will
 	 *     maintain aspect ratio according to the provided dimension.
 	 *
-	 *     @type array $size {
-	 *         @type int  ['width']  Optional. Image width.
-	 *         @type int  ['height'] Optional. Image height.
-	 *         @type bool ['crop']   Optional. Whether to crop the image. Default false.
+	 * @type array $size {
+	 * @type int  ['width']  Optional. Image width.
+	 * @type int  ['height'] Optional. Image height.
+	 * @type bool ['crop']   Optional. Whether to crop the image. Default false.
 	 *     }
 	 * }
 	 * @return array An array of resized images' metadata by size.

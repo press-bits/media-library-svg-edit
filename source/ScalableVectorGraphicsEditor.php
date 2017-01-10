@@ -52,7 +52,7 @@ class ScalableVectorGraphicsEditor extends WP_Image_Editor {
 	 * @return bool
 	 */
 	public static function test( $args = array() ) {
-		return true;
+		return empty( $args['method'] ) or ! in_array( $args['method'], [ 'rotate', 'flip' ], true );
 	}
 
 	/**

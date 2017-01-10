@@ -23,7 +23,12 @@ class WithoutValidFile extends PHPUnit_Framework_TestCase {
 	}
 
 	public function test_test() {
-		$this->assertTrue( Editor::test( [ 'foo' => 'bar' ] ), 'Expected test method to return true.' );
+		$this->assertTrue( Editor::test( [ 'foo' => 'bar' ] ), 'Expected test method to return true by default.' );
+	}
+
+	public function test_test_unsupported_methods() {
+		$this->assertFalse( Editor::test( [ 'method' => 'flip' ] ), 'Expected flip method to be unsupported.' );
+		$this->assertFalse( Editor::test( [ 'method' => 'rotate' ] ), 'Expected rotate method to be unsupported.' );
 	}
 
 	public function test_supports_svg_mime_type() {

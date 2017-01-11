@@ -25,14 +25,6 @@ class Editing {
 	protected static $enabled = false;
 
 	/**
-	 * The attachment being loaded in the editor, if any.
-	 *
-	 * @since 0.1.0
-	 * @var WP_Post
-	 */
-	protected static $edit_attachment = null;
-
-	/**
 	 * Enable by hooking into the WordPress lifecycle.
 	 *
 	 * @since 0.1.0
@@ -45,8 +37,7 @@ class Editing {
 		add_filter( 'file_is_displayable_image', [ __CLASS__, 'file_is_displayable_image' ], 10, 2 );
 		add_filter( 'wp_get_attachment_metadata', [ __CLASS__, 'svg_attachment_metadata' ], 10, 2 );
 
-		add_action( 'wp_ajax_image-editor', [ __CLASS__, 'sniff_edit_attachment' ], -1 );
-		add_action( 'admin_print_styles', [ __CLASS__, 'admin_print_styles' ] );
+		add_action( 'wp_ajax_image-editor', [ __CLASS__, 'edit_attachment_inline_styles' ], -1 );
 
 		static::$enabled = true;
 	}
@@ -117,7 +108,7 @@ class Editing {
 	 * @since 0.1.0
 	 * @return string
 	 */
-	public static function sniff_edit_attachment() {
+	public static function edit_attachment_inline_styles() {
 		if ( empty( $_POST['postid'] ) ) {
 			return;
 		}
@@ -130,24 +121,12 @@ class Editing {
 			return;
 		}
 
-		static::$edit_attachment = $attachment;
-	}
-
-	/**
-	 * Add styles to hide unsupported SVG image editor buttons.
-	 *
-	 * @since 0.1.0
-	 */
-	public static function admin_print_styles() {
-		if ( empty( static::$edit_attachment ) ) {
-			return;
-		}
 		?>
 		<style type="text/css">
-			#image-editor-<?php echo static::$edit_attachment->ID; ?> .imgedit-flipv,
-			#image-editor-<?php echo static::$edit_attachment->ID; ?> .imgedit-fliph,
-			#image-editor-<?php echo static::$edit_attachment->ID; ?> .imgedit-rleft,
-			#image-editor-<?php echo static::$edit_attachment->ID; ?> .imgedit-rright {
+			#image-editor-<?php echo $attachment_id; ?> .imgedit-flipv,
+			#image-editor-<?php echo $attachment_id; ?> .imgedit-fliph,
+			#image-editor-<?php echo $attachment_id; ?> .imgedit-rleft,
+			#image-editor-<?php echo $attachment_id; ?> .imgedit-rright {
 				display: none;
 			}
 		</style>

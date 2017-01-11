@@ -27,11 +27,7 @@ class Loaded extends WpTestCase {
 
 		WP\Actions::expectAdded( 'wp_ajax_image-editor' )
 			->once()
-			->with( [ 'PressBits\\MediaLibrary\\ScalableVectorGraphics\\Editing', 'sniff_edit_attachment' ], -1 );
-
-		WP\Actions::expectAdded( 'admin_print_styles' )
-			->once()
-			->with( [ 'PressBits\\MediaLibrary\\ScalableVectorGraphics\\Editing', 'admin_print_styles' ] );
+			->with( [ 'PressBits\\MediaLibrary\\ScalableVectorGraphics\\Editing', 'edit_attachment_inline_styles' ], -1 );
 
 		Editing::enable();
 	}
@@ -87,10 +83,8 @@ class Loaded extends WpTestCase {
 		Functions::expect( 'get_post' )->once()->with( 3 )->andReturn( $attachment );
 		Functions::expect( 'wp_verify_nonce' )->once()->with( 'image-editor-3' )->andReturn( true );
 
-		Editing::sniff_edit_attachment();
-
 		ob_start();
-		Editing::admin_print_styles();
+		Editing::edit_attachment_inline_styles();
 		$css = ob_get_clean();
 
 		$this->assertContains(

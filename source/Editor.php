@@ -44,10 +44,7 @@ class Editor extends WP_Image_Editor {
 	 * @return bool
 	 */
 	public static function test( $args = array() ) {
-		if ( empty( $args['methods'] ) ) {
-			return true;
-		}
-		return ! in_array( 'flip', $args['methods'], true ) and ! in_array( 'rotate', $args['methods'], true );
+		return true;
 	}
 
 	/**

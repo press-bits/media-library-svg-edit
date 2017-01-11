@@ -25,9 +25,9 @@ class Loaded extends WpTestCase {
 			->once()
 			->with( [ 'PressBits\\MediaLibrary\\ScalableVectorGraphics\\Editing', 'svg_attachment_metadata' ], 10, 2 );
 
-		WP\Filters::expectAdded( 'admin_body_class' )
+		WP\Actions::expectAdded( 'wp_ajax_image-editor' )
 			->once()
-			->with( [ 'PressBits\\MediaLibrary\\ScalableVectorGraphics\\Editing', 'admin_body_class' ] );
+			->with( [ 'PressBits\\MediaLibrary\\ScalableVectorGraphics\\Editing', 'sniff_edit_attachment' ], -1 );
 
 		WP\Actions::expectAdded( 'admin_print_styles' )
 			->once()
@@ -79,27 +79,22 @@ class Loaded extends WpTestCase {
 		$this->assertEquals( compact( 'file', 'width', 'height' ), $meta, 'Expected filtered meta to be SVG dimensions.' );
 	}
 
-	public function test_admin_body_class() {
-		$post = (object) [ 'post_mime_type' => MIMEType::SVG_IMAGE ];
+	public function test_edit_attachment_print_styles() {
+		$attachment = (object) [ 'ID' => 3, 'post_mime_type' => MIMEType::SVG_IMAGE ];
 
-		Functions::expect( 'get_post' )->once()->andReturn( $post );
+		$_POST['postid'] = $attachment->ID;
 
-		$class = Editing::admin_body_class( 'foo' );
+		Functions::expect( 'get_post' )->once()->with( 3 )->andReturn( $attachment );
+		Functions::expect( 'wp_verify_nonce' )->once()->with( 'image-editor-3' )->andReturn( true );
 
-		$this->assertEquals(
-			'foo edit-attachment-svg ',
-			$class,
-			'Expected SVG attachment class to be added.'
-		);
-	}
+		Editing::sniff_edit_attachment();
 
-	public function test_admin_print_styles() {
 		ob_start();
 		Editing::admin_print_styles();
 		$css = ob_get_clean();
 
 		$this->assertContains(
-			'.post-type-attachment.edit-attachment-svg .imgedit-flipv',
+			'#image-editor-3 .imgedit-flipv',
 			$css,
 			'Expected vertical flip button selector.'
 		);
